@@ -148,7 +148,7 @@ New features and improvements are being added to enhance the platform.
 
 B.Tech – Artificial Intelligence and Data Science
 
-GitHub: Add your GitHub profile URL here.
+GitHub: https://github.com/alam1coder
 
 ## 📄 License
 

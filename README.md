@@ -133,3 +133,18 @@ site/
 
 - All calculations occur locally on your machine. No sensitive corporate or academic datasets are uploaded to third-party cloud servers.
 - Safe predefined deterministic analytical operations prevent arbitrary code execution from user natural-language input.
+
+---
+
+## 👨‍💻 Author
+
+**Tanveer Alam**  
+B.Tech – Artificial Intelligence and Data Science  
+GitHub: [alam1coder](https://github.com/alam1coder)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+

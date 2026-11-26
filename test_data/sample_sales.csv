@@ -1,0 +1,51 @@
+Order_ID,Date,Product,Category,Region,Quantity,Unit_Price,Revenue,Customer_Age
+ORD-1000,2025-01-01,Edge Sensor Pro,Hardware,Europe,4,1500,6000,49
+ORD-1001,2025-01-02,BioPulse Watch,Cloud,Latin America,4,890,3560,59
+ORD-1002,2025-01-03,Cloud Hub Alpha,Cloud,Latin America,8,450,3600,39
+ORD-1003,2025-01-04,Edge Sensor Pro,Hardware,North America,18,450,8100,41
+ORD-1004,2025-01-05,Cloud Hub Alpha,Hardware,Latin America,17,890,15130,53
+ORD-1005,2025-01-06,Cloud Hub Alpha,Cloud,Europe,2,2200,4400,62
+ORD-1006,2025-01-07,NeuroChip X1,Wearables,Latin America,18,120,2160,33
+ORD-1007,2025-01-08,Edge Sensor Pro,Hardware,Latin America,16,450,7200,63
+ORD-1008,2025-01-09,NeuroChip X1,Hardware,North America,14,890,12460,37
+ORD-1009,2025-01-10,Quantum GPU,Wearables,Asia Pacific,13,120,1560,62
+ORD-1010,2025-01-11,Cloud Hub Alpha,Wearables,Europe,17,2200,37400,40
+ORD-1011,2025-01-12,NeuroChip X1,Hardware,Asia Pacific,12,2200,26400,45
+ORD-1012,2025-01-13,Cloud Hub Alpha,Cloud,Europe,17,450,7650,41
+ORD-1013,2025-01-14,Edge Sensor Pro,Sensors,Latin America,7,120,840,44
+ORD-1014,2025-01-15,NeuroChip X1,Cloud,North America,6,450,2700,58
+ORD-1015,2025-01-16,Quantum GPU,Sensors,Asia Pacific,10,2200,22000,60
+ORD-1016,2025-01-17,Edge Sensor Pro,Cloud,Latin America,10,890,8900,58
+ORD-1017,2025-01-18,Edge Sensor Pro,Sensors,Latin America,12,120,1440,42
+ORD-1018,2025-01-19,Edge Sensor Pro,Hardware,Latin America,12,120,1440,40
+ORD-1019,2025-01-20,NeuroChip X1,Cloud,North America,5,450,2250,53
+ORD-1020,2025-01-21,Cloud Hub Alpha,Sensors,Latin America,10,2200,22000,39
+ORD-1021,2025-01-22,BioPulse Watch,Cloud,Asia Pacific,19,1500,28500,39
+ORD-1022,2025-01-23,Edge Sensor Pro,Cloud,Latin America,8,1500,12000,46
+ORD-1023,2025-01-24,Edge Sensor Pro,Hardware,North America,13,2200,28600,43
+ORD-1024,2025-01-25,NeuroChip X1,Hardware,Europe,6,1500,9000,57
+ORD-1025,2025-01-26,BioPulse Watch,Cloud,Asia Pacific,14,2200,30800,47
+ORD-1026,2025-01-27,Edge Sensor Pro,Wearables,Latin America,17,2200,37400,50
+ORD-1027,2025-01-28,NeuroChip X1,Hardware,Asia Pacific,10,890,8900,24
+ORD-1028,2025-01-29,Cloud Hub Alpha,Hardware,Asia Pacific,12,1500,18000,49
+ORD-1029,2025-01-30,BioPulse Watch,Hardware,Europe,15,1500,22500,48
+ORD-1030,2025-01-31,NeuroChip X1,Hardware,Asia Pacific,8,120,960,29
+ORD-1031,2025-02-01,BioPulse Watch,Hardware,North America,18,1500,27000,49
+ORD-1032,2025-02-02,Cloud Hub Alpha,Cloud,Latin America,5,120,600,31
+ORD-1033,2025-02-03,Quantum GPU,Sensors,Asia Pacific,2,2200,4400,57
+ORD-1034,2025-02-04,Quantum GPU,Wearables,Latin America,13,120,1560,58
+ORD-1035,2025-02-05,BioPulse Watch,Sensors,Europe,5,120,600,54
+ORD-1036,2025-02-06,Cloud Hub Alpha,Wearables,Asia Pacific,16,890,14240,62
+ORD-1037,2025-02-07,Quantum GPU,Wearables,North America,19,450,8550,22
+ORD-1038,2025-02-08,Cloud Hub Alpha,Sensors,North America,11,2200,24200,40
+ORD-1039,2025-02-09,Cloud Hub Alpha,Cloud,Latin America,15,1500,22500,23
+ORD-1040,2025-02-10,NeuroChip X1,Sensors,North America,1,450,450,39
+ORD-1041,2025-02-11,BioPulse Watch,Hardware,Latin America,5,1500,7500,47
+ORD-1042,2025-02-12,Edge Sensor Pro,Sensors,Europe,4,890,3560,52
+ORD-1043,2025-02-13,Edge Sensor Pro,Hardware,Europe,15,120,1800,48
+ORD-1044,2025-02-14,Cloud Hub Alpha,Wearables,Latin America,13,450,5850,25
+ORD-1045,2025-02-15,Quantum GPU,Wearables,North America,17,1500,25500,47
+ORD-1046,2025-02-16,Quantum GPU,Wearables,Europe,10,2200,22000,22
+ORD-1047,2025-02-17,Cloud Hub Alpha,Cloud,Europe,19,890,16910,57
+ORD-1048,2025-02-18,BioPulse Watch,Cloud,North America,7,120,840,64
+ORD-1049,2025-02-19,NeuroChip X1,Wearables,Latin America,7,2200,15400,36

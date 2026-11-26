@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity – AI Data Analysis Platform</title>
+  <meta name="description" content="Professional AI CSV Data Analysis Platform. Smart CSV upload with delimiter and encoding sniffing, automated data analysis, interactive visualizations, and interactive data cleaning studio.">
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Local Vendor Libraries with CDN Fallbacks for 100% Offline Reliability -->
+  <script src="js/vendor/chart.umd.min.js"></script>
+  <script>
+    if (typeof Chart === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');
+    }
+  </script>
+  <script src="js/vendor/papaparse.min.js"></script>
+  <script>
+    if (typeof Papa === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ====================================================================
+         LEFT SIDEBAR NAVIGATION
+         ==================================================================== -->
+    <aside class="app-sidebar" id="appSidebar">
+      
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">Antigravity AI</span>
+          <span class="sidebar-brand-badge">
+            <span class="pulse-indicator"></span>
+            <span>Analytics Platform</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav" id="sidebarNav">
+        
+        <div class="nav-section-title">Core Modules</div>
+        
+        <button class="nav-item active" data-tab="tab-overview" id="navBtnOverview">
+          <span class="nav-item-icon">📊</span>
+          <span>Overview</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-ingestion" id="navBtnIngestion">
+          <span class="nav-item-icon">📥</span>
+          <span>Import Dataset</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-explorer" id="navBtnExplorer">
+          <span class="nav-item-icon">🔍</span>
+          <span>Data Preview</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-eda" id="navBtnEda">
+          <span class="nav-item-icon">🔬</span>
+          <span>Data Analysis</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-visual" id="navBtnVisual">
+          <span class="nav-item-icon">📈</span>
+          <span>Visualizations</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-clean" id="navBtnClean">
+          <span class="nav-item-icon">🛠️</span>
+          <span>Data Cleaning</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-export" id="navBtnExport">
+          <span class="nav-item-icon">📦</span>
+          <span>Export Center</span>
+        </button>
+
+        <div class="nav-section-title">AI & Modeling</div>
+
+        <button class="nav-item" data-tab="tab-ai-chat" id="navBtnAiChat">
+          <span class="nav-item-icon">💬</span>
+          <span>Ask AI Analyst</span>
+          <span class="nav-item-badge">AI</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-ml" id="navBtnMl">
+          <span class="nav-item-icon">🤖</span>
+          <span>Predictive AI Suite</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-reports" id="navBtnReports">
+          <span class="nav-item-icon">📑</span>
+          <span>Executive Dossier</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="server-status-pill" id="backendStatusPill" title="Backend Server Connectivity">
+          <span class="status-dot-green" id="backendStatusDot"></span>
+          <span id="backendStatusText">Checking Backend...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         MAIN WRAPPER & TOP NAVBAR
+         ==================================================================== -->
+    <div class="main-wrapper">
+      
+      <header class="top-navbar">
+        <div class="topbar-left">
+          <div class="active-dataset-badge">
+            <span>📦</span>
+            <span id="topbarDatasetName">Loading Dataset...</span>
+            <span id="topbarDimPill" style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">(0 rows • 0 cols)</span>
+          </div>
+
+          <select class="form-control" id="datasetSwitcherSelect" style="max-width: 220px; font-size: 0.8rem; padding: 0.35rem 0.6rem;">
+            <option value="" disabled selected>Select active dataset...</option>
+          </select>
+        </div>
+
+        <div class="topbar-right">
+          <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light / Dark Theme">
+            <span id="themeToggleIcon">🌙</span>
+          </button>
+          
+          <button class="btn btn-secondary btn-sm" id="btnTopExportCsv" title="Export current dataset as CSV">
+            <span>📥 Export CSV</span>
+          </button>
+
+          <button class="btn btn-primary btn-sm" id="btnTopExportPdf" title="Download Executive Dossier PDF">
+            <span>📄 Export PDF</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           WORKSPACE CONTENT PANES
+           ==================================================================== -->
+      <main class="workspace-content">
+
+        <!-- ==============================================================
+             PANE 1: OVERVIEW DASHBOARD
+             ============================================================== -->
+        <section class="tab-pane active" id="tab-overview">
+          
+          <!-- Natural Language Hero Command Bar -->
+          <div class="command-hero-card">
+            <div class="command-hero-header">
+              <div class="command-hero-title">
+                <h2><span>💬</span> Ask NeuroData AI</h2>
+                <p>Type normal English commands to calculate metrics, discover drivers, plot charts, or forecast trends.</p>
+              </div>
+            </div>
+
+            <div class="command-input-container">
+              <div class="command-input-box">
+                <span>🔎</span>
+                <input type="text" id="nlCommandInput" placeholder="e.g. 'Show me the most purchased product' or 'Calculate total sales and average order value'...">
+              </div>
+              <button class="btn btn-accent" id="btnExecuteCommand">
+                <span>⚡ Run AI Analysis</span>
+              </button>
+            </div>
+
+            <div class="command-suggestions-row" id="commandSuggestionsRow">
+              <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Quick Questions:</span>
+              <button class="suggestion-chip" data-cmd="Analyze my dataset.">📊 Analyze my dataset</button>
+              <button class="suggestion-chip" data-cmd="Show me the most purchased product.">🏆 Most purchased product</button>
+              <button class="suggestion-chip" data-cmd="Calculate total sales and average order value.">💰 Total sales & AOV</button>
+              <button class="suggestion-chip" data-cmd="Show monthly sales trends.">📈 Monthly sales trends</button>
+              <button class="suggestion-chip" data-cmd="Compare sales across different regions.">🌍 Regional comparison</button>
+              <button class="suggestion-chip" data-cmd="Find correlations between numerical columns.">🔗 Correlations</button>
+              <button class="suggestion-chip" data-cmd="Show unusual values and outliers.">🚨 Outliers & anomalies</button>
+              <button class="suggestion-chip" data-cmd="Predict next month's sales.">⏳ Predict next month</button>
+            </div>
+          </div>
+
+          <!-- Query Result Display Panel (Populated on Command Execution) -->
+          <div class="query-result-panel" id="queryResultPanel">
+            <div class="query-answer-header">
+              <div>
+                <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--primary);">QUERY EXECUTION RESULT</span>
+                <div class="query-summary-highlight" id="querySummaryText">--</div>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btnCloseQueryResult">✕ Close</button>
+            </div>
+
+            <p class="query-explanation-text" id="queryExplanationText"></p>
+
+            <!-- Dynamic Chart Slot for NL Commands -->
+            <div id="queryChartSlot" style="display: none; height: 320px; position: relative;">
+              <canvas id="queryCanvas"></canvas>
+            </div>
+
+            <!-- Evidence Data Table Slot -->
+            <div id="queryTableSlot" class="table-responsive" style="display: none; max-height: 240px;">
+              <table class="data-table" id="queryEvidenceTable">
+                <thead id="queryTableHeader"></thead>
+                <tbody id="queryTableBody"></tbody>
+              </table>
+            </div>
+
+            <!-- Follow-up Suggestions -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;" id="queryNextSuggestions">
+              <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Suggested Next Actions:</span>
+            </div>
+          </div>
+
+          <!-- KPI Summary Metrics Grid -->
+          <div class="kpi-summary-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-blue">📄</div>
+              <div class="kpi-meta">
+                <span class="kpi-label">OBSERVATIONS</span>
+                <span class="kpi-value" id="kpiRowCount">0</span>
+                <span class="kpi-subtext" id="kpiDatasetSub">Active Records</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-purple">🧬</div>
+              <div class="kpi-meta">
+                <span class="kpi-label">DIMENSIONS</span>
+                <span class="kpi-value" id="kpiColCount">0</span>
+                <span class="kpi-subtext" id="kpiColTypes">0 Num &bull; 0 Cat</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-emerald">🛡️</div>
+              <div class="kpi-meta">
+                <span class="kpi-label">DATA COMPLETENESS</span>
+                <span class="kpi-value" id="kpiCompleteness">100%</span>
+                <span class="kpi-subtext" id="kpiMissingCells">0 Missing Cells</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-rose">📑</div>
+              <div class="kpi-meta">
+                <span class="kpi-label">DUPLICATE ROWS</span>
+                <span class="kpi-value" id="kpiDuplicateCount">0</span>
+                <span class="kpi-subtext">Identified Duplicates</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-cyan">⚡</div>
+              <div class="kpi-meta">
+                <span class="kpi-label">ANALYTICS ENGINE</span>
+                <span class="kpi-value" id="kpiEngineStatus" style="color: var(--accent-emerald);">Ready</span>
+                <span class="kpi-subtext">Deterministic Math</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Analytics Section: Chart + Business Insights -->
+          <div class="grid-2col">
+            
+            <!-- Quick Chart Preview -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 id="overviewChartTitle">Key Metric Distribution</h3>
+                  <p id="overviewChartSubtitle">Automated primary dimension breakdown</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-canvas-wrapper" style="height: 320px;">
+                  <canvas id="overviewCanvas"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Executive Business Insights -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3>🧠 Automated Executive Insights</h3>
+                  <p>Key findings derived automatically from data statistics</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="insights-grid" id="overviewInsightsContainer" style="grid-template-columns: 1fr;">
+                  <!-- Populated dynamically via JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Ingestion Dropzone on Dashboard -->
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>📁 Fast Data Ingestion</h3>
+                <p>Drag and drop a new file or select from preloaded benchmark datasets</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="upload-dropzone" id="quickDropzone">
+                <input type="file" id="quickFileInput" accept=".csv,.xlsx,.xls,.json,.pdf,.tsv" style="display: none;">
+                <span class="dropzone-icon">🚀</span>
+                <div class="dropzone-title">Drop CSV, Excel (.xlsx), JSON, or PDF file here</div>
+                <p class="dropzone-hint">Supports auto-delimiter detection, multi-sheet workbooks, and PDF table extraction</p>
+                <div class="format-badges-row">
+                  <span class="format-badge">.CSV</span>
+                  <span class="format-badge">.XLSX</span>
+                  <span class="format-badge">.XLS</span>
+                  <span class="format-badge">.JSON</span>
+                  <span class="format-badge">.PDF Tables</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 2: DATA INGESTION & SMART CSV STUDIO
+             ============================================================== -->
+        <section class="tab-pane" id="tab-ingestion">
+          
+          <div class="grid-2col">
+            
+            <!-- Custom File Ingestion Studio -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3>📁 Smart CSV Upload Studio</h3>
+                  <p>Auto-detects delimiters (comma, semicolon, tab, pipe), UTF-8 / UTF-8 BOM encodings, and validates data.</p>
+                </div>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="upload-dropzone" id="fullDropzone">
+                  <input type="file" id="fullFileInput" accept=".csv,.xlsx,.xls,.json,.pdf,.tsv" style="display: none;">
+                  <span class="dropzone-icon">📥</span>
+                  <div class="dropzone-title">Drop CSV file here or click to browse</div>
+                  <p class="dropzone-hint">Supports UTF-8, UTF-8 BOM, Latin-1 &bull; Auto-detects delimiters (, ; \t |) &bull; Up to 50MB</p>
+                  <div class="format-badges-row">
+                    <span class="format-badge">.CSV</span>
+                    <span class="format-badge">.XLSX</span>
+                    <span class="format-badge">.JSON</span>
+                    <span class="format-badge">.PDF Tables</span>
+                  </div>
+                </div>
+
+                <!-- Live Upload Progress -->
+                <div id="uploadProgressBox" style="display: none; background: var(--bg-card-subtle); padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.82rem; border: 1px solid var(--border-color);">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                    <span id="uploadStatusLabel" style="font-weight: 600; color: var(--text-primary);">Processing and validating file...</span>
+                    <span id="uploadPercentLabel" style="font-weight: 700; color: var(--primary);">0%</span>
+                  </div>
+                  <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                    <div id="uploadProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent-emerald)); transition: width 0.25s;"></div>
+                  </div>
+                </div>
+
+                <!-- Detected Upload File Metadata Status Card -->
+                <div id="uploadMetaStatusCard" style="display: none; background: var(--bg-card-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary);">File Validation & Attributes</span>
+                    <span class="quality-badge badge-clean" id="uploadMetaStatusBadge">Validated</span>
+                  </div>
+                  <div class="comparison-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));">
+                    <div class="metric-box">
+                      <div class="metric-val" id="metaFilename" style="font-size: 0.85rem; word-break: break-all;">--</div>
+                      <div class="metric-lbl">Filename</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="metaFileSize">--</div>
+                      <div class="metric-lbl">File Size</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="metaDelimiter" style="color: var(--primary);">--</div>
+                      <div class="metric-lbl">Delimiter</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="metaEncoding">--</div>
+                      <div class="metric-lbl">Encoding</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="metaRowsCols">--</div>
+                      <div class="metric-lbl">Dimensions</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preloaded Curated Presets -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3>🎓 Preloaded Benchmark Datasets</h3>
+                  <p>Instant demonstration datasets with real-world distributions and edge-cases</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="preset-cards-grid" id="fullPresetsContainer">
+                  <!-- Populated dynamically via JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Preview of First 10-20 Rows -->
+          <div class="dashboard-card" id="uploadPreviewCard">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>👁️ Initial Data Preview (First 20 Observations)</h3>
+                <p>Instant tabular verification of parsed columns, headers, and values</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" id="btnGoToExplorer">
+                  <span>🔍 Open Data Preview Editor</span>
+                </button>
+                <button class="btn btn-primary btn-sm" id="btnGoToAnalysis">
+                  <span>🔬 Automatic Analysis &rarr;</span>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive" style="max-height: 380px;">
+                <table class="data-table" id="uploadPreviewTable">
+                  <thead id="uploadPreviewHeader"></thead>
+                  <tbody id="uploadPreviewBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dataset Schema Inspection -->
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>🔍 Ingested Feature Attributes & Inferred Schema</h3>
+                <p>Inferred column types, unique cardinality, null counts, and completeness</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="data-table" id="schemaInspectionTable">
+                  <thead>
+                    <tr>
+                      <th>Column Name</th>
+                      <th>Inferred Type</th>
+                      <th>Non-Null Count</th>
+                      <th>Missing Count</th>
+                      <th>Unique Values</th>
+                      <th>Completeness</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schemaInspectionBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 3: DATA PREVIEW & EDITABLE SPREADSHEET
+             ============================================================== -->
+        <section class="tab-pane" id="tab-explorer">
+          
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>✏️ Spreadsheet Data Preview & Inline Editor</h3>
+                <p>Click any cell to edit inline. Search, filter by column, sort, and undo changes safely.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.78rem; color: var(--text-muted);">Rows:</span>
+                  <select class="form-control" id="tablePageSizeSelect" style="width: 75px; padding: 0.35rem 0.5rem; font-size: 0.8rem;">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.78rem; color: var(--text-muted);">Column:</span>
+                  <select class="form-control" id="tableColumnFilterSelect" style="max-width: 130px; padding: 0.35rem 0.5rem; font-size: 0.8rem;">
+                    <option value="" selected>All Columns</option>
+                  </select>
+                </div>
+
+                <input type="text" class="form-control" id="tableSearchInput" placeholder="🔎 Search records..." style="width: 180px; padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+
+                <button class="btn btn-secondary btn-sm" id="btnUndoExplorer" title="Undo the latest modification">
+                  <span>↩️ Undo</span>
+                </button>
+
+                <button class="btn btn-secondary btn-sm" id="btnResetExplorer" title="Reset dataset to original state">
+                  <span>🔄 Reset</span>
+                </button>
+
+                <button class="btn btn-primary btn-sm" id="btnExportExplorerCsv">
+                  <span>📥 Export CSV</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <span class="quality-badge badge-warning" id="cellModifiedBadge" style="display: none;">0 Modified Cells</span>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">💡 Tip: Double-click or click any table cell to edit its value and press Enter to save.</span>
+                </div>
+                <div id="tableSortStatus" style="font-size: 0.76rem; color: var(--text-muted); font-family: var(--font-mono);"></div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table" id="mainDataTable">
+                  <thead id="tableHeader"></thead>
+                  <tbody id="tableBody"></tbody>
+                </table>
+              </div>
+
+              <div class="pagination-controls">
+                <div id="paginationInfo">Showing 0 of 0 rows</div>
+                <div style="display: flex; gap: 0.4rem;">
+                  <button class="btn btn-secondary btn-sm" id="btnPrevPage">Previous</button>
+                  <button class="btn btn-secondary btn-sm" id="btnNextPage">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 4: ASK NEURODATA AI (DEDICATED ANALYST CHAT)
+             ============================================================== -->
+        <section class="tab-pane" id="tab-ai-chat">
+          
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>💬 Natural-Language AI Analytics Assistant</h3>
+                <p>Ask continuous business questions in natural English — powered by deterministic analytics</p>
+              </div>
+            </div>
+
+            <div class="card-body" style="display: flex; flex-direction: column; gap: 1.25rem;">
+              
+              <!-- Chat Prompt Box -->
+              <div class="command-input-container">
+                <div class="command-input-box">
+                  <span>💬</span>
+                  <input type="text" id="aiChatInput" placeholder="e.g. 'Show me the top 10 products by revenue' or 'Find correlations'...">
+                </div>
+                <button class="btn btn-accent" id="btnSubmitAiChat">
+                  <span>Ask AI</span>
+                </button>
+              </div>
+
+              <!-- Chat History Container -->
+              <div id="chatHistoryContainer" style="display: flex; flex-direction: column; gap: 1rem; max-height: 600px; overflow-y: auto;">
+                <!-- Populated on chat interaction -->
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 5: AUTOMATED DATA ANALYSIS ENGINE
+             ============================================================== -->
+        <section class="tab-pane" id="tab-eda">
+          
+          <!-- Analysis Navigation Tabs -->
+          <div class="dashboard-card" style="margin-bottom: 1.25rem;">
+            <div class="card-header" style="flex-direction: column; align-items: flex-start; gap: 0.75rem;">
+              <div class="card-title-group">
+                <h3>🔬 Automated Data Analysis Engine</h3>
+                <p>Complete statistical profiling, categorical frequency breakdown, correlation discovery, and data health inspection</p>
+              </div>
+
+              <div class="analysis-subnav-row" style="margin: 0; padding: 0; border: none;">
+                <button class="analysis-tab-btn active" data-eda-pane="pane-eda-overview">
+                  <span>📊</span> Dataset Overview
+                </button>
+                <button class="analysis-tab-btn" data-eda-pane="pane-eda-numerical">
+                  <span>📐</span> Numerical Stats (13 Metrics)
+                </button>
+                <button class="analysis-tab-btn" data-eda-pane="pane-eda-categorical">
+                  <span>🏷️</span> Categorical Analysis
+                </button>
+                <button class="analysis-tab-btn" data-eda-pane="pane-eda-quality">
+                  <span>🛡️</span> Data Quality & Health
+                </button>
+                <button class="analysis-tab-btn" data-eda-pane="pane-eda-correlation">
+                  <span>🔥</span> Correlation Heatmap
+                </button>
+                <button class="analysis-tab-btn" data-eda-pane="pane-eda-insights">
+                  <span>🧠</span> AI Insights & Findings
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              
+              <!-- Sub-pane 1: Dataset Overview -->
+              <div class="eda-pane active" id="pane-eda-overview">
+                <div class="comparison-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 1.5rem;">
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewRows">--</div>
+                    <div class="metric-lbl">Total Rows</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewCols">--</div>
+                    <div class="metric-lbl">Total Columns</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewCells">--</div>
+                    <div class="metric-lbl">Total Cells</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewMissing" style="color: var(--accent-rose);">--</div>
+                    <div class="metric-lbl">Missing Values</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewDups" style="color: var(--accent-amber);">--</div>
+                    <div class="metric-lbl">Duplicate Rows</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewNumCols">--</div>
+                    <div class="metric-lbl">Numerical Cols</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewCatCols">--</div>
+                    <div class="metric-lbl">Categorical Cols</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="edaOverviewMemory" style="color: var(--accent-emerald);">--</div>
+                    <div class="metric-lbl">Memory Usage</div>
+                  </div>
+                </div>
+
+                <div class="grid-2col">
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Quality Health Score</h4>
+                    <div style="background: var(--bg-card-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+                      <div id="edaHealthScoreVal" style="font-size: 2.75rem; font-weight: 800; font-family: var(--font-heading); color: var(--accent-emerald);">100%</div>
+                      <div id="edaHealthStatusText" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-top: 0.25rem;">Clean Dataset Structure</div>
+                      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;" id="edaHealthSummary">No critical nulls or schema anomalies detected.</p>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Dataset Dimensions Breakdown</h4>
+                    <div class="table-responsive" style="max-height: 200px;">
+                      <table class="data-table" id="edaDimBreakdownTable">
+                        <thead>
+                          <tr>
+                            <th>Attribute</th>
+                            <th>Count</th>
+                            <th>Percentage</th>
+                          </tr>
+                        </thead>
+                        <tbody id="edaDimBreakdownBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 2: Numerical Statistics (All 13 Metrics) -->
+              <div class="eda-pane" id="pane-eda-numerical">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Calculated metrics: Mean, Median, Mode, Std, Variance, Min, Max, Range, Q1, Q3, IQR, Skewness, Kurtosis</span>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <label class="control-label" for="edaNumFeatureSelect" style="margin: 0;">Feature Filter:</label>
+                    <select class="form-control" id="edaNumFeatureSelect" style="max-width: 180px; padding: 0.35rem 0.6rem; font-size: 0.82rem;">
+                      <option value="all">All Numerical Features</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="data-table" id="edaFullNumericalTable">
+                    <thead>
+                      <tr>
+                        <th>Feature</th>
+                        <th>Mean</th>
+                        <th>Median</th>
+                        <th>Mode</th>
+                        <th>Std Dev</th>
+                        <th>Variance</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Range</th>
+                        <th>Q1 (25%)</th>
+                        <th>Q3 (75%)</th>
+                        <th>IQR</th>
+                        <th>Skewness</th>
+                        <th>Kurtosis</th>
+                      </tr>
+                    </thead>
+                    <tbody id="edaFullNumericalBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Sub-pane 3: Categorical Profiler -->
+              <div class="eda-pane" id="pane-eda-categorical">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Unique categories, top frequency distribution, percentage share, and rare categories detection</span>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <label class="control-label" for="edaCatFeatureSelect" style="margin: 0;">Target Category:</label>
+                    <select class="form-control" id="edaCatFeatureSelect" style="max-width: 200px; padding: 0.35rem 0.6rem; font-size: 0.82rem;"></select>
+                  </div>
+                </div>
+
+                <div class="grid-2col">
+                  <div>
+                    <div class="comparison-metrics-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 1rem;">
+                      <div class="metric-box">
+                        <div class="metric-val" id="catMetricUnique">--</div>
+                        <div class="metric-lbl">Unique Classes</div>
+                      </div>
+                      <div class="metric-box">
+                        <div class="metric-val" id="catMetricTop" style="font-size: 0.95rem;">--</div>
+                        <div class="metric-lbl">Top Mode Class</div>
+                      </div>
+                      <div class="metric-box">
+                        <div class="metric-val" id="catMetricTopPct">--</div>
+                        <div class="metric-lbl">Dominance Share</div>
+                      </div>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Frequency Breakdown</h4>
+                    <div id="catDistributionList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 280px; overflow-y: auto;">
+                      <!-- Populated dynamically with percentage bars -->
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">🚨 Rare Categories (&le; 5% Representation)</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">Categories with minimal observations can distort classification models and statistical tests:</p>
+                    <div id="catRareCategoriesContainer" style="display: flex; flex-wrap: wrap; gap: 0.4rem; max-height: 260px; overflow-y: auto;">
+                      <!-- Populated dynamically -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 4: Data Quality & Health -->
+              <div class="eda-pane" id="pane-eda-quality">
+                <div class="comparison-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 1.25rem;">
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityMissingCols">0</div>
+                    <div class="metric-lbl">Columns with Nulls</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityDupRows">0</div>
+                    <div class="metric-lbl">Duplicate Records</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityOutlierCount">0</div>
+                    <div class="metric-lbl">IQR Outlier Values</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityConstantCols">0</div>
+                    <div class="metric-lbl">Constant Zero-Var Cols</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityHighCardCols">0</div>
+                    <div class="metric-lbl">High Cardinality Cols</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val" id="qualityNegativeCols">0</div>
+                    <div class="metric-lbl">Negative Domain Values</div>
+                  </div>
+                </div>
+
+                <div class="dashboard-card" style="border: 1px solid var(--border-color); margin-bottom: 0;">
+                  <div class="card-header">
+                    <div class="card-title-group">
+                      <h4>Data Quality Issue Registry</h4>
+                      <p>Automated checks detecting anomalies, potential corrupted inputs, or data distribution violations</p>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div id="qualityIssuesRegistry" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                      <!-- Populated dynamically -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 5: Correlation Matrix Heatmap -->
+              <div class="eda-pane" id="pane-eda-correlation">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Bivariate correlation matrix across numerical features. Constant features safely handled.</span>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <label class="control-label" for="corrMethodSelect" style="margin: 0;">Method:</label>
+                    <select class="form-control" id="corrMethodSelect" style="width: 140px; padding: 0.35rem 0.6rem; font-size: 0.82rem;">
+                      <option value="pearson" selected>Pearson (Linear)</option>
+                      <option value="spearman">Spearman (Rank)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div id="correlationHeatmapContainer"></div>
+
+                <div style="margin-top: 1rem; display: flex; align-items: center; gap: 1.5rem; justify-content: center; font-size: 0.76rem; color: var(--text-muted);">
+                  <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="display: inline-block; width: 14px; height: 14px; background: #e11d48; border-radius: 2px;"></span>
+                    <span>Negative Correlation (-1.0 to -0.5)</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="display: inline-block; width: 14px; height: 14px; background: var(--bg-card-subtle); border: 1px solid var(--border-color); border-radius: 2px;"></span>
+                    <span>Neutral / Uncorrelated (0.0)</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="display: inline-block; width: 14px; height: 14px; background: #2563eb; border-radius: 2px;"></span>
+                    <span>Positive Correlation (+0.5 to +1.0)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 6: AI Insights & Findings -->
+              <div class="eda-pane" id="pane-eda-insights">
+                <div style="margin-bottom: 1rem;">
+                  <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">🧠 Automated Fact-Based AI Findings</h4>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Synthesized patterns, unusual observations, potential relationships, and recommended cleaning operations based on deterministic math.</p>
+                </div>
+
+                <div class="insights-grid" id="edaInsightsContainer"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 6: VISUAL STUDIO (INTERACTIVE CHART BUILDER)
+             ============================================================== -->
+        <section class="tab-pane" id="tab-visual">
+          
+          <div class="studio-layout-grid">
+            
+            <!-- Controls Sidebar -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3>⚙️ Visual Studio Controls</h3>
+                  <p>Configure chart dimensions, filters, palettes & aggregations</p>
+                </div>
+              </div>
+              <div class="card-body control-panel">
+                
+                <div class="control-group">
+                  <label class="control-label">Chart Type (9 Interactive Types)</label>
+                  <div class="chart-type-selector-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <button class="btn-chart-type active" data-chart="bar" title="Categorical comparisons">
+                      <span>📊</span><span>Bar</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="line" title="Sequential & time-series trends">
+                      <span>📈</span><span>Line</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="histogram" title="Continuous distribution frequency">
+                      <span>📉</span><span>Histogram</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="doughnut" title="Proportional share & composition">
+                      <span>🍩</span><span>Pie / Donut</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="boxplot" title="5-Number statistical summary & spread">
+                      <span>📦</span><span>Box Plot</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="scatter" title="Bivariate relationship & clusters">
+                      <span>✨</span><span>Scatter</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="heatmap" title="Pearson & Spearman correlation matrix">
+                      <span>🔥</span><span>Heatmap</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="missing" title="Missing values frequency by column">
+                      <span>🛡️</span><span>Null Chart</span>
+                    </button>
+                    <button class="btn-chart-type" data-chart="outliers" title="IQR statistical outlier bounds">
+                      <span>🚨</span><span>Outliers</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="control-group" id="groupAxisX">
+                  <label class="control-label" for="studioAxisX">X-Axis (Dimension / Category)</label>
+                  <select class="form-control" id="studioAxisX"></select>
+                </div>
+
+                <div class="control-group" id="groupAxisY">
+                  <label class="control-label" for="studioAxisY">Y-Axis (Metric / Value)</label>
+                  <select class="form-control" id="studioAxisY"></select>
+                </div>
+
+                <!-- Histogram Bins Option -->
+                <div class="control-group" id="groupHistogramBins" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="control-label" for="studioBinsRange" style="margin: 0;">Histogram Bins:</label>
+                    <span id="studioBinsLabel" style="font-family: var(--font-mono); font-weight: 700; color: var(--primary);">10</span>
+                  </div>
+                  <input type="range" class="form-control" id="studioBinsRange" min="5" max="30" value="10" style="padding: 0; margin-top: 0.35rem;">
+                </div>
+
+                <!-- Heatmap Method Option -->
+                <div class="control-group" id="groupHeatmapMethod" style="display: none;">
+                  <label class="control-label" for="studioHeatmapMethod">Correlation Method</label>
+                  <select class="form-control" id="studioHeatmapMethod">
+                    <option value="pearson" selected>Pearson (Linear Relationship)</option>
+                    <option value="spearman">Spearman (Monotonic Rank)</option>
+                  </select>
+                </div>
+
+                <div class="control-group" id="groupAggregation">
+                  <label class="control-label" for="studioAggregation">Aggregation Function</label>
+                  <select class="form-control" id="studioAggregation">
+                    <option value="avg" selected>Average (Mean)</option>
+                    <option value="sum">Sum (&Sigma;)</option>
+                    <option value="count">Count (Frequency)</option>
+                    <option value="max">Maximum</option>
+                    <option value="min">Minimum</option>
+                    <option value="raw">Raw Records</option>
+                  </select>
+                </div>
+
+                <!-- Dynamic Dataset Value Filtering -->
+                <div class="control-group" style="background: var(--bg-card-subtle); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <label class="control-label" style="margin: 0;">🔎 Filter Chart Data</label>
+                    <button class="btn btn-secondary btn-sm" id="btnClearChartFilter" style="padding: 0.15rem 0.45rem; font-size: 0.72rem;">Clear</button>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                    <select class="form-control" id="chartFilterCol" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                      <option value="">No Filter (All Rows)</option>
+                    </select>
+                    <div style="display: grid; grid-template-columns: 80px 1fr; gap: 0.35rem;">
+                      <select class="form-control" id="chartFilterOp" style="font-size: 0.8rem; padding: 0.3rem 0.4rem;">
+                        <option value="equals">=</option>
+                        <option value="contains">has</option>
+                        <option value="gt">&gt;</option>
+                        <option value="lt">&lt;</option>
+                      </select>
+                      <input type="text" class="form-control" id="chartFilterVal" placeholder="Filter value..." style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="studioThemeSelect">Color Palette</label>
+                  <select class="form-control" id="studioThemeSelect">
+                    <option value="corporate" selected>Corporate Clean</option>
+                    <option value="aurora">Deep Aurora</option>
+                    <option value="sunset">Sunset Warmth</option>
+                  </select>
+                </div>
+
+                <button class="btn btn-primary" id="btnUpdateChart" style="margin-top: 0.5rem;">
+                  <span>🔄 Re-render Chart</span>
+                </button>
+
+                <button class="btn btn-secondary btn-sm" id="btnDownloadChartPng">
+                  <span>📷 Download High-Res PNG</span>
+                </button>
+
+              </div>
+            </div>
+
+            <!-- Chart Display Viewport & Trend Analysis -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h3 id="studioChartTitle">Chart Viewport</h3>
+                    <p id="studioChartSubtitle">Dynamic aggregated data rendering</p>
+                  </div>
+                  <div id="chartFilterNotice" style="display: none;" class="quality-badge badge-warning">Filter Active</div>
+                </div>
+                <div class="card-body">
+                  <div class="chart-canvas-wrapper" style="height: 380px;">
+                    <canvas id="studioCanvas"></canvas>
+                  </div>
+                  <div id="studioHeatmapSlot" style="display: none; max-height: 400px; overflow: auto;"></div>
+                </div>
+              </div>
+
+              <!-- Automated Trend Analysis Card -->
+              <div class="dashboard-card" id="studioTrendCard">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h4>📈 Automated Trend & Pattern Detection</h4>
+                    <p>Calculated trajectory across sequential intervals or numerical relationships</p>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="studioTrendContent" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <span id="trendDirectionIcon" style="font-size: 1.6rem;">📈</span>
+                      <div>
+                        <div id="trendSummaryText" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Evaluating trends...</div>
+                        <div id="trendDetailText" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">Select numerical columns to observe statistical slopes.</div>
+                      </div>
+                    </div>
+                    <div class="quality-badge badge-clean" id="trendStrengthBadge">Moderate Trend</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 7: PREDICTIVE AI & ML SUITE
+             ============================================================== -->
+        <section class="tab-pane" id="tab-ml">
+          
+          <div class="dashboard-card">
+            
+            <div class="card-header" style="flex-direction: column; align-items: flex-start; gap: 0.75rem;">
+              <div class="card-title-group">
+                <h3>🤖 Machine Learning & Predictive Analytics Suite</h3>
+                <p>Time-series forecasting, Ordinary Least Squares regression, K-Means clustering, and anomaly detection</p>
+              </div>
+
+              <!-- ML Sub-tabs -->
+              <div class="ml-subnav-row" style="margin: 0; padding: 0; border: none;">
+                <button class="ml-tab-btn active" data-ml-pane="pane-regression">
+                  <span>📈</span> Regression Modeling
+                </button>
+                <button class="ml-tab-btn" data-ml-pane="pane-forecast">
+                  <span>⏳</span> Trend & Holt Forecasting
+                </button>
+                <button class="ml-tab-btn" data-ml-pane="pane-clustering">
+                  <span>🎯</span> K-Means Clustering
+                </button>
+                <button class="ml-tab-btn" data-ml-pane="pane-anomaly">
+                  <span>🚨</span> Anomaly & Outlier Scanner
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              
+              <!-- Sub-pane 1: Regression -->
+              <div class="ml-pane active" id="pane-regression">
+                <div class="studio-layout-grid">
+                  <div class="control-panel">
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">Regression Parameters</h4>
+                    
+                    <div class="control-group">
+                      <label class="control-label" for="regFeatureX">Independent Feature (X)</label>
+                      <select class="form-control" id="regFeatureX"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="regTargetY">Dependent Target (Y)</label>
+                      <select class="form-control" id="regTargetY"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="regModelType">Model Degree</label>
+                      <select class="form-control" id="regModelType">
+                        <option value="linear">Degree 1: Linear (y = mx + b)</option>
+                        <option value="polynomial">Degree 2: Quadratic (y = ax² + bx + c)</option>
+                      </select>
+                    </div>
+
+                    <button class="btn btn-accent" id="btnTrainRegression">
+                      <span>⚡ Fit Regression Model</span>
+                    </button>
+
+                    <!-- Interactive Predictor -->
+                    <div style="background-color: var(--bg-card-subtle); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 0.5rem;">
+                      <label class="control-label">🔮 Interactive Predictor</label>
+                      <p style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 0.4rem;">Enter a value for X to evaluate model prediction:</p>
+                      <input type="number" class="form-control" id="predictorInputX" placeholder="Enter X value...">
+                      <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem;">
+                        <span style="color: var(--text-muted);">Predicted Y:</span>
+                        <strong id="predictedOutputY" style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--primary);">--</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="card-title-group" style="margin-bottom: 0.75rem;">
+                      <h4 id="regChartTitle" style="font-size: 0.95rem; font-weight: 700;">Regression Curve & Goodness of Fit</h4>
+                      <p id="regEquationDisplay" style="font-size: 0.8rem; color: var(--primary); font-family: var(--font-mono);">y = mx + b</p>
+                    </div>
+
+                    <div class="stats-summary-grid" style="margin-bottom: 1rem;">
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">R² SCORE</span>
+                        <span class="stat-tile-val" id="regMetricR2">--</span>
+                      </div>
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">RMSE</span>
+                        <span class="stat-tile-val" id="regMetricRMSE">--</span>
+                      </div>
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">MSE</span>
+                        <span class="stat-tile-val" id="regMetricMSE">--</span>
+                      </div>
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">OBSERVATIONS</span>
+                        <span class="stat-tile-val" id="regMetricN">--</span>
+                      </div>
+                    </div>
+
+                    <div class="chart-canvas-wrapper" style="height: 340px;">
+                      <canvas id="regressionCanvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 2: Forecasting -->
+              <div class="ml-pane" id="pane-forecast">
+                <div class="studio-layout-grid">
+                  <div class="control-panel">
+                    <h4 style="font-size: 0.95rem; font-weight: 700;">Forecasting Setup</h4>
+
+                    <div class="control-group">
+                      <label class="control-label" for="forecastFeatureSelect">Target Time Series Feature</label>
+                      <select class="form-control" id="forecastFeatureSelect"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="forecastHorizonSelect">Forecast Horizon</label>
+                      <select class="form-control" id="forecastHorizonSelect">
+                        <option value="5">Next 5 Steps</option>
+                        <option value="10" selected>Next 10 Steps</option>
+                        <option value="15">Next 15 Steps</option>
+                        <option value="20">Next 20 Steps</option>
+                      </select>
+                    </div>
+
+                    <button class="btn btn-accent" id="btnRunForecast">
+                      <span>⏳ Generate Projections</span>
+                    </button>
+                  </div>
+
+                  <div>
+                    <div class="card-title-group" style="margin-bottom: 0.75rem;">
+                      <h4 style="font-size: 0.95rem; font-weight: 700;">Holt's Exponential Smoothing Projections</h4>
+                      <p style="font-size: 0.8rem; color: var(--text-muted);">Historical actuals with forward projected trajectory</p>
+                    </div>
+
+                    <div class="chart-canvas-wrapper" style="height: 360px;">
+                      <canvas id="forecastCanvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 3: K-Means Clustering -->
+              <div class="ml-pane" id="pane-clustering">
+                <div class="studio-layout-grid">
+                  <div class="control-panel">
+                    <h4 style="font-size: 0.95rem; font-weight: 700;">Clustering Setup</h4>
+
+                    <div class="control-group">
+                      <label class="control-label" for="clusterFeatX">Feature 1 (Horizontal)</label>
+                      <select class="form-control" id="clusterFeatX"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="clusterFeatY">Feature 2 (Vertical)</label>
+                      <select class="form-control" id="clusterFeatY"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="clusterK">Number of Clusters (K)</label>
+                      <select class="form-control" id="clusterK">
+                        <option value="2">K = 2 Clusters</option>
+                        <option value="3" selected>K = 3 Clusters</option>
+                        <option value="4">K = 4 Clusters</option>
+                        <option value="5">K = 5 Clusters</option>
+                        <option value="6">K = 6 Clusters</option>
+                      </select>
+                    </div>
+
+                    <button class="btn btn-accent" id="btnRunClustering">
+                      <span>🎯 Execute K-Means</span>
+                    </button>
+
+                    <div class="stats-summary-grid" style="grid-template-columns: 1fr 1fr; margin-top: 0.5rem;">
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">ITERATIONS</span>
+                        <span class="stat-tile-val" id="clusterMetricIter">--</span>
+                      </div>
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">WCSS (INERTIA)</span>
+                        <span class="stat-tile-val" id="clusterMetricWCSS">--</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="card-title-group" style="margin-bottom: 0.75rem;">
+                      <h4 style="font-size: 0.95rem; font-weight: 700;">Partition Scatter & Centroids</h4>
+                      <p style="font-size: 0.8rem; color: var(--text-muted);">Normalized clusters with white triangle partition centroids</p>
+                    </div>
+
+                    <div class="chart-canvas-wrapper" style="height: 360px;">
+                      <canvas id="clusterCanvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-pane 4: Anomaly Detection -->
+              <div class="ml-pane" id="pane-anomaly">
+                <div class="studio-layout-grid">
+                  <div class="control-panel">
+                    <h4 style="font-size: 0.95rem; font-weight: 700;">Anomaly Scanner</h4>
+
+                    <div class="control-group">
+                      <label class="control-label" for="anomalyFeatureSelect">Target Feature</label>
+                      <select class="form-control" id="anomalyFeatureSelect"></select>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="anomalyMethodSelect">Detection Algorithm</label>
+                      <select class="form-control" id="anomalyMethodSelect">
+                        <option value="iqr" selected>IQR Tukey's Method (1.5x IQR)</option>
+                        <option value="zscore">Z-Score Standardized (|Z| > 2.5)</option>
+                      </select>
+                    </div>
+
+                    <button class="btn btn-accent" id="btnScanAnomalies">
+                      <span>🚨 Detect Outliers</span>
+                    </button>
+
+                    <div class="stats-summary-grid" style="grid-template-columns: 1fr 1fr; margin-top: 0.5rem;">
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">ANOMALIES</span>
+                        <span class="stat-tile-val" id="anomalyMetricCount" style="color: var(--accent-rose);">--</span>
+                      </div>
+                      <div class="stat-metric-tile">
+                        <span class="stat-tile-lbl">OUTLIER RATE</span>
+                        <span class="stat-tile-val" id="anomalyMetricRate">--</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="card-title-group" style="margin-bottom: 0.75rem;">
+                      <h4 style="font-size: 0.95rem; font-weight: 700;">Statistical Anomaly Threshold Bounds</h4>
+                      <p style="font-size: 0.8rem; color: var(--text-muted);">Points in crimson violate statistical boundaries</p>
+                    </div>
+
+                    <div class="chart-canvas-wrapper" style="height: 360px;">
+                      <canvas id="anomalyCanvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 8: DATA CLEANING & UPDATE STUDIO
+             ============================================================== -->
+        <section class="tab-pane" id="tab-clean">
+          
+          <!-- Before and After Comparison Card -->
+          <div class="dashboard-card" style="margin-bottom: 1.25rem;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>📊 Before & After Data Transformation Comparison</h3>
+                <p>Real-time audit tracking original vs transformed dataset state</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" id="btnUndoClean" title="Undo the latest cleaning operation">
+                  <span>↩️ Undo Last Operation</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btnRestoreOriginalData" title="Reset dataset to initial state">
+                  <span>🔄 Reset to Original</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="comparison-metrics-grid">
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanOrigRows">--</div>
+                  <div class="metric-lbl">Original Rows</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanUpdatedRows" style="color: var(--primary);">--</div>
+                  <div class="metric-lbl">Updated Rows</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanOrigMissing">--</div>
+                  <div class="metric-lbl">Original Nulls</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanUpdatedMissing" style="color: var(--accent-emerald);">--</div>
+                  <div class="metric-lbl">Remaining Nulls</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanOrigDups">--</div>
+                  <div class="metric-lbl">Original Dups</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanUpdatedDups" style="color: var(--accent-emerald);">--</div>
+                  <div class="metric-lbl">Remaining Dups</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-val" id="cleanModifiedCellsCount" style="color: var(--accent-amber);">0</div>
+                  <div class="metric-lbl">Modified Cells</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2col">
+            
+            <!-- Section A: Missing Values Management -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4>🩹 Missing Values Management</h4>
+                  <p>Drop incomplete rows or impute using mathematical strategies</p>
+                </div>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-card-subtle); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <div>
+                    <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary);">Drop Incomplete Rows</div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted);">Deletes any row containing at least one null value.</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" id="btnCleanDropNulls">
+                    <span>Drop Null Rows</span>
+                  </button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.6rem; background: var(--bg-card-subtle); padding: 0.85rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="control-label" for="cleanMissingColSelect" style="margin: 0;">Target Column:</label>
+                    <select class="form-control" id="cleanMissingColSelect" style="max-width: 200px; padding: 0.35rem 0.5rem; font-size: 0.82rem;"></select>
+                  </div>
+
+                  <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.25rem;">
+                    <button class="btn btn-secondary btn-sm" id="btnCleanFillMean">Fill Mean</button>
+                    <button class="btn btn-secondary btn-sm" id="btnCleanFillMedian">Fill Median</button>
+                    <button class="btn btn-secondary btn-sm" id="btnCleanFillMode">Fill Mode</button>
+                    <button class="btn btn-secondary btn-sm" id="btnCleanFfill">Forward Fill</button>
+                    <button class="btn btn-secondary btn-sm" id="btnCleanBfill">Backward Fill</button>
+                  </div>
+
+                  <div style="display: flex; gap: 0.4rem; align-items: center; margin-top: 0.4rem;">
+                    <input type="text" class="form-control" id="cleanCustomValInput" placeholder="Custom value..." style="padding: 0.35rem 0.6rem; font-size: 0.82rem;">
+                    <button class="btn btn-primary btn-sm" id="btnCleanFillCustom" style="white-space: nowrap;">Fill Custom</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Section B: Duplicate Management -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4>📑 Duplicate Records Management</h4>
+                  <p>Detect, inspect, and remove identical rows safely</p>
+                </div>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                
+                <div style="background: var(--bg-card-subtle); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">Identified Duplicate Rows</div>
+                      <div style="font-size: 0.76rem; color: var(--text-muted);">Rows matching identically across all feature attributes.</div>
+                    </div>
+                    <span class="quality-badge badge-warning" id="cleanDupBadgeCount" style="font-size: 0.85rem;">0 Duplicates</span>
+                  </div>
+
+                  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                      <label class="control-label" for="cleanDupKeepSelect" style="margin: 0; font-size: 0.78rem;">Keep:</label>
+                      <select class="form-control" id="cleanDupKeepSelect" style="width: 130px; padding: 0.3rem 0.5rem; font-size: 0.8rem;">
+                        <option value="first" selected>First Occurrence</option>
+                        <option value="last">Last Occurrence</option>
+                      </select>
+                    </div>
+
+                    <div style="display: flex; gap: 0.4rem;">
+                      <button class="btn btn-secondary btn-sm" id="btnPreviewDuplicates">
+                        <span>👁️ Preview Duplicates</span>
+                      </button>
+                      <button class="btn btn-primary btn-sm" id="btnCleanRemoveDuplicates">
+                        <span>🗑️ Remove Duplicates</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="grid-2col" style="margin-top: 1.25rem;">
+            
+            <!-- Section C: Outlier Management -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4>🚨 Outlier Management (IQR Tukey Bounds)</h4>
+                  <p>Detect extreme statistical anomalies, preview records, cap (winsorize) or delete</p>
+                </div>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+                
+                <div style="background: var(--bg-card-subtle); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="control-label" for="cleanOutlierColSelect" style="margin: 0;">Numerical Feature:</label>
+                    <select class="form-control" id="cleanOutlierColSelect" style="max-width: 200px; padding: 0.35rem 0.5rem; font-size: 0.82rem;"></select>
+                  </div>
+
+                  <div class="comparison-metrics-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-top: 0.25rem;">
+                    <div class="metric-box">
+                      <div class="metric-val" id="cleanOutlierLower" style="font-size: 0.88rem;">--</div>
+                      <div class="metric-lbl">Lower (Q1-1.5*IQR)</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="cleanOutlierUpper" style="font-size: 0.88rem;">--</div>
+                      <div class="metric-lbl">Upper (Q3+1.5*IQR)</div>
+                    </div>
+                    <div class="metric-box">
+                      <div class="metric-val" id="cleanOutlierCount" style="color: var(--accent-rose); font-size: 0.88rem;">0</div>
+                      <div class="metric-lbl">Outliers Found</div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; gap: 0.4rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 0.25rem;">
+                    <button class="btn btn-secondary btn-sm" id="btnPreviewOutliers">
+                      <span>👁️ Preview Outliers</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btnCleanCapOutliers" title="Cap values at lower/upper fences">
+                      <span>🛡️ Cap Outliers</span>
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="btnCleanRemoveOutliers" title="Remove rows violating bounds">
+                      <span>🗑️ Remove Outliers</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Section D: Column Management -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4>🧬 Column Management & Transformations</h4>
+                  <p>Rename, delete, add calculated columns, or cast types</p>
+                </div>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                
+                <!-- Rename Column -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.4rem; align-items: center; background: var(--bg-card-subtle); padding: 0.6rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <select class="form-control" id="cleanRenameColSelect" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;"></select>
+                  <input type="text" class="form-control" id="cleanRenameNewName" placeholder="New column name..." style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                  <button class="btn btn-secondary btn-sm" id="btnCleanRenameCol">Rename</button>
+                </div>
+
+                <!-- Delete Column -->
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.4rem; align-items: center; background: var(--bg-card-subtle); padding: 0.6rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <select class="form-control" id="cleanDeleteColSelect" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;"></select>
+                  <button class="btn btn-secondary btn-sm" id="btnCleanDeleteCol" style="color: var(--accent-rose);">Delete Col</button>
+                </div>
+
+                <!-- Add Column -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.4rem; align-items: center; background: var(--bg-card-subtle); padding: 0.6rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <input type="text" class="form-control" id="cleanAddColName" placeholder="New col name..." style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                  <input type="text" class="form-control" id="cleanAddColFormula" placeholder="Constant or formula..." style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                  <button class="btn btn-primary btn-sm" id="btnCleanAddCol">Add Col</button>
+                </div>
+
+                <!-- Convert Type -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.4rem; align-items: center; background: var(--bg-card-subtle); padding: 0.6rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                  <select class="form-control" id="cleanTypeColSelect" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;"></select>
+                  <select class="form-control" id="cleanTargetTypeSelect" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">
+                    <option value="numeric">Cast to Numeric</option>
+                    <option value="string">Cast to String</option>
+                    <option value="datetime">Cast to Datetime</option>
+                  </select>
+                  <button class="btn btn-secondary btn-sm" id="btnCleanConvertType">Cast</button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Section E: Audit Operation History Log -->
+          <div class="dashboard-card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h4>📜 Transformation Audit Trail & History</h4>
+                <p>Sequential log of executed cleaning steps and their mathematical impact</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="cleanOperationLogContainer" class="operation-log-list" style="max-height: 220px; overflow-y: auto;">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-align: center; padding: 1.5rem;">
+                  No transformations applied yet. Dataset is currently at baseline.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 9: EXPORT & DOWNLOAD CENTER
+             ============================================================== -->
+        <section class="tab-pane" id="tab-export">
+          
+          <div class="dashboard-card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3>📦 Enterprise Export & Download Center</h3>
+                <p>Download cleaned datasets in standard enterprise formats, export executive PDF dossiers, or grab statistical summaries</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="export-cards-grid">
+                
+                <!-- Cleaned CSV -->
+                <div class="export-card">
+                  <div class="export-card-icon">📄</div>
+                  <div class="export-card-title">Cleaned CSV</div>
+                  <div class="export-card-desc">Standard Comma-Separated Values with UTF-8 encoding and latest transformations.</div>
+                  <button class="btn btn-primary btn-sm" id="btnExportCleanCsv">
+                    <span>📥 Download CSV</span>
+                  </button>
+                </div>
+
+                <!-- Excel XLSX -->
+                <div class="export-card">
+                  <div class="export-card-icon">📊</div>
+                  <div class="export-card-title">Excel Spreadsheet (.xlsx)</div>
+                  <div class="export-card-desc">Styled multi-column workbook via openpyxl with formatted headers and auto-widths.</div>
+                  <button class="btn btn-primary btn-sm" id="btnExportCleanXlsx">
+                    <span>📥 Download Excel</span>
+                  </button>
+                </div>
+
+                <!-- JSON -->
+                <div class="export-card">
+                  <div class="export-card-icon">🧬</div>
+                  <div class="export-card-title">JSON Records</div>
+                  <div class="export-card-desc">Standard structured JSON array suitable for REST APIs, MongoDB, and web apps.</div>
+                  <button class="btn btn-primary btn-sm" id="btnExportCleanJson">
+                    <span>📥 Download JSON</span>
+                  </button>
+                </div>
+
+                <!-- Original Dataset -->
+                <div class="export-card">
+                  <div class="export-card-icon">⏪</div>
+                  <div class="export-card-title">Original Dataset</div>
+                  <div class="export-card-desc">Download the pristine raw CSV as originally ingested before any cleaning operations.</div>
+                  <button class="btn btn-secondary btn-sm" id="btnExportOriginalDataset">
+                    <span>📥 Raw Baseline CSV</span>
+                  </button>
+                </div>
+
+                <!-- Statistical Summary CSV -->
+                <div class="export-card">
+                  <div class="export-card-icon">📐</div>
+                  <div class="export-card-title">Statistical Summary CSV</div>
+                  <div class="export-card-desc">Exports calculated metrics (Mean, Median, Std, Min, Max, Skewness, Kurtosis) for numerical features.</div>
+                  <button class="btn btn-secondary btn-sm" id="btnExportStatsSummaryCsv">
+                    <span>📥 Download Stats CSV</span>
+                  </button>
+                </div>
+
+                <!-- Executive Dossier PDF -->
+                <div class="export-card">
+                  <div class="export-card-icon">📑</div>
+                  <div class="export-card-title">Executive Dossier (PDF)</div>
+                  <div class="export-card-desc">Formal multi-page executive report generated via ReportLab with KPI summaries and charts.</div>
+                  <button class="btn btn-accent btn-sm" id="btnExportExecutivePdf">
+                    <span>📄 Download Dossier PDF</span>
+                  </button>
+                </div>
+
+                <!-- Chart PNG -->
+                <div class="export-card">
+                  <div class="export-card-icon">📷</div>
+                  <div class="export-card-title">Studio Chart PNG</div>
+                  <div class="export-card-desc">High-resolution raster graphic of the currently active visual studio chart.</div>
+                  <button class="btn btn-secondary btn-sm" id="btnExportStudioChartPng">
+                    <span>📷 Download Chart PNG</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==============================================================
+             PANE 10: EXECUTIVE DOSSIER (REPORTS)
+             ============================================================== -->
+        <section class="tab-pane" id="tab-reports">
+          <div id="executiveReportContainer">
+            <!-- Populated dynamically via Reports.renderReportView -->
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ====================================================================
+       MODALS: DUPLICATE PREVIEW & OUTLIER PREVIEW
+       ==================================================================== -->
+  <!-- Duplicate Records Preview Modal -->
+  <div class="modal-overlay" id="duplicateModal">
+    <div class="modal-dialog" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 class="modal-title">📑 Detected Duplicate Records</h3>
+        <button class="btn btn-secondary btn-sm" id="btnCloseDupModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          The following rows have identical feature values. You can review them before deciding to remove:
+        </p>
+        <div class="table-responsive" style="max-height: 360px;">
+          <table class="data-table" id="duplicateRecordsTable">
+            <thead id="duplicateTableHeader"></thead>
+            <tbody id="duplicateTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <button class="btn btn-secondary btn-sm" id="btnCancelDupModal">Cancel</button>
+        <button class="btn btn-primary btn-sm" id="btnConfirmRemoveDuplicates">Remove Duplicates Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outlier Records Preview Modal -->
+  <div class="modal-overlay" id="outlierModal">
+    <div class="modal-dialog" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🚨 Detected Outlier Records</h3>
+        <button class="btn btn-secondary btn-sm" id="btnCloseOutlierModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;" id="outlierModalDesc">
+            Observations where the selected feature exceeds Tukey's IQR boundaries (Q1 - 1.5*IQR or Q3 + 1.5*IQR):
+          </p>
+          <span class="quality-badge badge-warning" id="outlierModalColBadge">Feature</span>
+        </div>
+        <div class="table-responsive" style="max-height: 360px;">
+          <table class="data-table" id="outlierRecordsTable">
+            <thead id="outlierTableHeader"></thead>
+            <tbody id="outlierTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <button class="btn btn-secondary btn-sm" id="btnCancelOutlierModal">Cancel</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" id="btnConfirmCapOutliers">Cap (Winsorize)</button>
+          <button class="btn btn-primary btn-sm" id="btnConfirmRemoveOutliers">Delete Outlier Rows</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODALS: PDF TABLE PICKER & EXCEL SHEET PICKER
+       ==================================================================== -->
+  <div class="modal-overlay" id="pdfTableModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">📑 PDF Tables Detected</h3>
+        <button class="btn btn-secondary btn-sm" id="btnClosePdfModal">✕</button>
+      </div>
+      <div class="modal-body" id="pdfModalBody">
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Multiple tables were extracted from this PDF document. Select which table you would like to load and analyze:</p>
+        <div id="pdfTablesList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" id="btnCancelPdfModal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Logic Modules -->
+  <script src="js/datasets.js"></script>
+  <script src="js/eda.js"></script>
+  <script src="js/ml.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

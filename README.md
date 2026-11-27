@@ -1,4 +1,4 @@
-# ⚡ NeuroData AI — Enterprise Data Analytics & Predictive Visualization Studio
+# ⚡ NeuroData Studio — Enterprise Data Analytics & Predictive Visualization Platform
 
 > An intelligent, full-stack AI data analytics and predictive visualization platform engineered with modern HTML5, Vanilla CSS (Enterprise SaaS Design System), Python REST backend (Pandas, Scikit-Learn, PDFPlumber, ReportLab), and natural-language query processing.
 
@@ -6,11 +6,11 @@
 
 ## 🌟 Executive Overview
 
-**NeuroData AI** bridges the gap between raw datasets and actionable business intelligence. Users can either upload raw files or type normal English business questions (such as *"Show me the most purchased product"*, *"Calculate total sales and average order value"*, or *"Predict next month's sales"*) to receive computed metrics, interactive visualizations, and plain-English strategic takeaways.
+**NeuroData Studio** bridges the gap between raw datasets and actionable business intelligence. Users can either upload raw files or type normal English business questions (such as *"Show me the most purchased product"*, *"Calculate total sales and average order value"*, or *"Predict next month's sales"*) to receive computed metrics, interactive visualizations, and plain-English strategic takeaways.
 
 ### Key Capabilities
 - **Multi-Format Ingestion**: Full support for `.csv` (auto-delimiter and encoding sniffing), `.xlsx`/`.xls` (multi-sheet selector), `.json`, and `.pdf` (automated table extraction via `pdfplumber` and selectable table inspector).
-- **Natural-Language Commands ("Ask NeuroData AI")**: Deterministic intent parser mapping business semantics to dataset columns with dynamic Chart.js rendering and evidence data tables.
+- **Natural-Language Commands ("Ask NeuroData Studio")**: Deterministic intent parser mapping business semantics to dataset columns with dynamic Chart.js rendering and evidence data tables.
 - **Automated Exploratory Data Analysis (EDA)**: Automatic 5-number statistical summaries, skewness, variance, Tukey outlier detection, categorical distributions, and interactive Pearson correlation heatmaps.
 - **Intelligent Business Insights**: Structured takeaways complete with supporting metric, business implication, and actionable recommendations.
 - **Predictive AI Suite**: Linear and Quadratic (Degree 2) OLS Regression with real-time "What-If" prediction, Holt's Exponential Trend Forecasting with horizon selection, K-Means Clustering, and Tukey/Z-score Anomaly Scanners.

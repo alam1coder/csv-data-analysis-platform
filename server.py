@@ -1,5 +1,5 @@
 """
-NeuroData AI - Intelligent Data Analytics & Predictive Visualization Studio
+NeuroData Studio - Intelligent Data Analytics & Predictive Visualization Platform
 High-Performance Local Server with Data Science & ML API Endpoints.
 """
 
@@ -131,7 +131,7 @@ class NeuroDataHandler(http.server.SimpleHTTPRequestHandler):
         if path == '/api/health':
             self.send_json(200, {
                 'status': 'healthy',
-                'service': 'NeuroData AI Studio Backend',
+                'service': 'NeuroData Studio Backend',
                 'python_version': sys.version,
                 'libraries': {
                     'pandas': True,
@@ -777,7 +777,7 @@ def run_server():
         except OSError:
             continue
 
-    print(f"[*] NeuroData AI Studio Server v2.0 running at http://localhost:{port}")
+    print(f"[*] NeuroData Studio Server v2.0 running at http://localhost:{port}")
     print(f"   API Endpoints Ready:")
     print(f"   - GET  /api/health")
     print(f"   - POST /api/upload    (CSV, Excel, JSON, PDF)")

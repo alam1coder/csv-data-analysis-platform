@@ -2281,7 +2281,7 @@ const App = {
 
     const botBubble = document.createElement('div');
     botBubble.style.cssText = 'background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; align-self: flex-start; max-width: 85%;';
-    botBubble.innerHTML = `<div style="font-size:0.75rem; font-weight:700; color:var(--accent-emerald); margin-bottom:0.25rem;">⚡ ANTIGRAVITY AI ANALYST</div><div>Analyzing dataset metrics for "${msg}"...</div>`;
+    botBubble.innerHTML = `<div style="font-size:0.75rem; font-weight:700; color:var(--accent-emerald); margin-bottom:0.25rem;">⚡ NEURODATA STUDIO ANALYST</div><div>Analyzing dataset metrics for "${msg}"...</div>`;
     cont.appendChild(botBubble);
     cont.scrollTop = cont.scrollHeight;
 
@@ -2289,7 +2289,7 @@ const App = {
       const summary = document.getElementById('querySummaryText')?.textContent;
       const explanation = document.getElementById('queryExplanationText')?.textContent;
       botBubble.innerHTML = `
-        <div style="font-size:0.75rem; font-weight:700; color:var(--accent-emerald); margin-bottom:0.25rem;">⚡ ANTIGRAVITY AI ANALYST</div>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--accent-emerald); margin-bottom:0.25rem;">⚡ NEURODATA STUDIO ANALYST</div>
         <div style="font-weight:600; color:var(--text-primary); margin-bottom:0.35rem;">${summary}</div>
         <div style="font-size:0.84rem; color:var(--text-muted);">${explanation}</div>
       `;

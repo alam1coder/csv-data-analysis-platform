@@ -128,7 +128,7 @@ const Reports = {
           <div>
             <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary);">AUTOMATED EXECUTIVE DOSSIER</div>
             <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0.25rem 0;">${datasetTitle || 'Active Dataset Evaluation'}</h2>
-            <p style="font-size: 0.82rem; color: var(--text-muted);">NeuroData AI Studio &bull; Generated on ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">NeuroData Studio &bull; Generated on ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div style="display: flex; gap: 0.6rem;">
             <button class="btn btn-secondary btn-sm" onclick="window.print()">
@@ -255,7 +255,7 @@ const Reports = {
 
         <!-- Governance footer -->
         <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.76rem; color: var(--text-muted); line-height: 1.4;">
-          <strong>Governance Notice:</strong> This document was compiled deterministically by NeuroData AI Studio. Outlier detection uses Tukey's 1.5x IQR standard. All calculations are traceable to active dataset observations.
+          <strong>Governance Notice:</strong> This document was compiled deterministically by NeuroData Studio. Outlier detection uses Tukey's 1.5x IQR standard. All calculations are traceable to active dataset observations.
         </div>
       </div>
     `;
